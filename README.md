@@ -11,6 +11,13 @@ $ cd data
 $ wget https://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_41/GRCh37_mapping/gencode.v41lift37.annotation.gtf.gz
 ```
 
+## Limitations
+
+Currently for a single gene all intersecting TADs will be used to generate the
+start and end boundaries for the TAD by taking the median. If the distribution
+if TADs for a given gene is multimodal, these values might very well be an
+incorrect approximation.
+
 ## References
 
 TAD coordinates are obtained from [TADKB](http://dna.cs.miami.edu/TADKB/).
