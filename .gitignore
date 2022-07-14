@@ -1,2 +1,3 @@
 # do not store the gencode annotation file in git
-*annotation.gff3
+*annotation.gtf.gz
+gencode.db
