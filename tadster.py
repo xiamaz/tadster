@@ -3,6 +3,8 @@ from pathlib import Path
 import pandas as pd
 import gffutils
 
+import typer
+
 
 class Configuration:
     gencode_file = Path("./data/gencode.v41lift37.annotation.gtf.gz")
@@ -14,16 +16,13 @@ class Configuration:
     human_tad_cell_types = {'GM12878', 'HMEC', 'NHEK', 'IMR90', 'KBM7', 'K562', 'HUVEC'}
 
 
-if __name__ == "__main__":
-    Configuration.gencode_db.unlink()
+def main(input_tsv: Path, output_annotated: Path):
     if not Configuration.gencode_db.exists():
         db = gffutils.create_db(str(Configuration.gencode_file), str(Configuration.gencode_db), keep_order=True, disable_infer_genes=True, disable_infer_transcripts=True)
     else:
         db = gffutils.FeatureDB(str(Configuration.gencode_db))
 
-    print(db.schema())
-
-    data: pd.DataFrame = pd.read_csv("./examples/panelapp_osteogenesis_imperfecta.tsv", sep="\t") # type: ignore
+    data: pd.DataFrame = pd.read_csv(input_tsv, sep="\t") # type: ignore
 
     hgnc_mapping: Dict[str, Optional[gffutils.Feature]] = {k: None for k in data['HGNC']}
     for f in db.features_of_type("gene"):
@@ -80,4 +79,7 @@ if __name__ == "__main__":
                 'tad_end': end,
             })
     result_df = pd.DataFrame.from_records(result_data)
-    result_df.to_csv(Configuration.output_csv)
+    result_df.to_csv(output_annotated)
+
+if __name__ == "__main__":
+    typer.run(main)
