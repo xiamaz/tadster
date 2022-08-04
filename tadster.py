@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 from typing import Optional, Dict
 from pathlib import Path
 import pandas as pd
@@ -30,6 +31,7 @@ def main(input_tsv: Path, output_annotated: Path):
             hgnc_mapping[f['hgnc_id'][0]] = f
 
     # now we have hgnc mappings
+    print("Obtained following hgnc mappings")
     for f in hgnc_mapping.values():
         if f is not None:
             print(f.chrom, f.start, f.end)
@@ -75,7 +77,7 @@ def main(input_tsv: Path, output_annotated: Path):
                 'chrom': chrom,
                 'start': start,
                 'end': end,
-                'tad_start': start,
+                'tad_start': hic_start,
                 'tad_end': end,
             })
     result_df = pd.DataFrame.from_records(result_data)
